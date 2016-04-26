@@ -23,7 +23,213 @@ mysql> select * from AddressBook;
 
 mysql> INSERT INTO Account (email, password, createdOn, modifiedOn) VALUES ("1@fakemail.com", "sugarglider", NOW(), NOW());
 mysql> INSERT INTO Entry (addressBookId, firstName, lastName, birthday, type, subtype) VALUES (1, "John", "Bain", "1990-04-15 00:00:00", "home", "email");     
+mysql> INSERT INTO Entry (addressBookId, firstName, lastName, birthday, type, subtype) VALUES (1, "Jacqueline", "Bain", "1960-12-12 00:00:00", "home", "phone");
+mysql> INTO Entry (addressBookId, firstName, lastName, birthday, type, subtype) VALUES (1, "Francis", "Bain", "1955-08-07 00:00:00", "home", "phone")       -> ;
 
+mysql> DELETE from Entry where id=1;
 mysql> UPDATE Entry
     -> set id=1
-    -> where id=2;  //Had to fix something so I ran this. Good to know I can change auto-incrementing values manually.
+    -> where id=2;  //Had to fix something so I ran this. Good to know I can change auto-incrementing values manually (Although the count continues from the deleted item)
+    
+EXERCISE 3
+
+mysql> select * from AddressBook/Account/Entry
+
+EXERCISE 4
+
+mysql> UPDATE Account
+    -> set email="theGovernator@yahoo.com"
+    -> where id=2;
+    
+mysql>select * from Account;
+
++----+-------------------------+-------------+---------------------+---------------------+
+| id | email                   | password    | createdOn           | modifiedOn          |
++----+-------------------------+-------------+---------------------+---------------------+
+|  2 | theGovernator@yahoo.com | sugarglider | 2016-04-26 17:36:40 | 2016-04-26 17:36:40 |
++----+-------------------------+-------------+---------------------+---------------------+
+
+mysql> UPDATE AddressBook
+    -> set email="theGovernator@yahoo.com"
+    -> where id=2;
+    
+//Editing three rows at once (all with type "home" are now changed to type "other")
+mysql> UPDATE Entry SET
+    -> type = CASE WHEN type="home" THEN "other" ELSE NULL END;
+    
+EXERCISE 5
+
+mysql> drop table Entry;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from Entry;
+ERROR 1146 (42S02): Table 'decodemtl_addressbook_import.Entry' doesn't exist
+
+EXERCISE 6
+
+//Dropped Account.
+
+EXERCISE 7 
+💯
+
+EXERCISE 8
+mysql> select email from Account where id="63";
+
++-------------------------------------------------+
+| email                                           |
++-------------------------------------------------+
+| consectetuer.rhoncus.Nullam@temporloremeget.org |
++-------------------------------------------------+
+
+mysql> select name from AddressBook where accountId=3;
++---------------------------------+
+| name                            |
++---------------------------------+
+| Donec Incorporated              |
+| Ipsum Nunc LLC                  |
+| In Consectetuer Ltd             |
+| Lacus Aliquam Rutrum Industries |
+| Ac Ltd                          |
+| Mauris Consulting               |
+| Ornare Corporation              |
++---------------------------------+
+
+mysql> select createdOn from AddressBook where name="Lorem Foundation";
++---------------------+
+| createdOn           |
++---------------------+
+| 2016-06-26 02:43:41 |
+| 2015-05-04 14:28:16 |
++---------------------+
+
+//There are two "Lorem Foundations" as shown here:
+
+//+-----+-----------+------------------+---------------------+---------------------+
+//| id  | accountId | name             | createdOn           | modifiedOn          |
+//+-----+-----------+------------------+---------------------+---------------------+
+//|   5 |        84 | Lorem Foundation | 2016-06-26 02:43:41 | 2015-04-06 10:24:41 |
+//| 153 |        12 | Lorem Foundation | 2015-05-04 14:28:16 | 2015-05-24 20:46:26 |
+//+-----+-----------+------------------+---------------------+---------------------+
+
+EXERCISE 9
+
+mysql> select COUNT(*) from Account; //1000
+mysql> select COUNT(*) from AddressBook; //1100
+mysql> select COUNT(*) from AddressBook; //4000
+
+EXERCISE 10
+
+mysql> select * from Entry where birthday<"1982-2-12 00:00:00"; //2687 rows in set (0.01 sec)
+//Let's do it another way...
+
+mysql> select COUNT(*) from Entry where birthday<"1982-2-12 00:00:00";                                                                                         
++----------+
+| COUNT(*) |
++----------+
+|     2687 |
++----------+
+
+mysql> select COUNT(*) from Entry where birthday>="1965-01-01 00:00:00";                                                                                       
++----------+
+| COUNT(*) |
++----------+
+|     2597 |
++----------+
+
+mysql> SELECT * from AddressBook ORDER BY createdOn ASC LIMIT 1;
++-----+-----------+------------------+---------------------+---------------------+
+| id  | accountId | name             | createdOn           | modifiedOn          |
++-----+-----------+------------------+---------------------+---------------------+
+| 283 |        58 | Ridiculus Mus PC | 2014-09-18 15:45:47 | 2015-11-24 19:03:02 |
++-----+-----------+------------------+---------------------+---------------------+
+
+EXERCISE 11
+
+mysql> select COUNT(*) from Entry where type != "other";                                                                                                       
++----------+
+| COUNT(*) |
++----------+
+|     2800 |
++----------+
+
+mysql> select COUNT(*) from Entry where type = "home" OR type = "work";
++----------+
+| COUNT(*) |
++----------+
+|     2800 |
++----------+
+
+mysql> select COUNT(*) from Entry where subtype="phone";
++----------+
+| COUNT(*) |
++----------+
+|      600 |
++----------+
+
+EXERCISE 12
+
+//Account with the most addressbooks:
+
+mysql> SELECT accountId from AddressBook
+    -> group by accountId
+    -> order by COUNT(*) DESC
+    -> LIMIT 1;
++-----------+
+| accountId |
++-----------+
+|         5 |
++-----------+
+1 row in set (0.00 sec)
+
+
+mysql> SELECT * FROM Account where id=5;
++----+----------------------------+-------------+---------------------+---------------------+
+| id | email                      | password    | createdOn           | modifiedOn          |
++----+----------------------------+-------------+---------------------+---------------------+
+|  5 | in.cursus@sedconsequat.edu | JTV98CDW5SE | 2015-09-16 08:45:17 | 2016-07-08 22:28:11 |
++----+----------------------------+-------------+---------------------+---------------------+
+
+//Addressbook with the most entries
+
+mysql> SELECT addressBookId from Entry GROUP BY addressBookId ORDER BY COUNT(*) DESC LIMIT 1;                                                                  
++---------------+
+| addressBookId |
++---------------+
+|            37 |
++---------------+
+
+mysql> SELECT * FROM AddressBook where id=37;
++----+-----------+-----------------------+---------------------+---------------------+
+| id | accountId | name                  | createdOn           | modifiedOn          |
++----+-----------+-----------------------+---------------------+---------------------+
+| 37 |        79 | Eu Augue Incorporated | 2015-09-09 03:49:37 | 2014-12-09 02:01:11 |
++----+-----------+-----------------------+---------------------+---------------------+
+
+EXERCISE 13
+
+//How many Address Book Entries have phones starting with area code 3XX?
+
+mysql> SELECT COUNT(*) FROM Entry WHERE contentLineOne LIKE '(3__)_________';           //Is there a better way to do this?                                                                         
++----------+
+| COUNT(*) |
++----------+
+|       39 |
++----------+
+
+//How many Address Book Entries have home phones not containing the digit 5?
+
+mysql> SELECT COUNT(*) FROM Entry WHERE contentLineOne NOT LIKE '%5%';
++----------+
+| COUNT(*) |
++----------+
+|     2510 |
++----------+
+
+//How many Address Book Entries are work phones starting with a country code?
+
+mysql> SELECT COUNT(*) FROM Entry WHERE type = 'work' AND contentLineOne LIKE '_-___-___-____';                                                       
++----------+
+| COUNT(*) |
++----------+
+|       60 |
++----------+
