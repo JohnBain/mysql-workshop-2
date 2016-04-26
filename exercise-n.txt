@@ -1,0 +1,29 @@
+mysql> source data/import-table-structure.sql
+mysql> describe AddressBook         
+
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int(11)      | NO   | PRI | NULL    | auto_increment |
+| accountId  | int(11)      | NO   |     | NULL    |                |
+| name       | varchar(255) | NO   |     | NULL    |                |
+| createdOn  | datetime     | NO   |     | NULL    |                |
+| modifiedOn | datetime     | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+mysql> INSERT INTO AddressBook (accountId, name, createdOn, modifiedOn) VALUES (1, "John Bain", NOW(), NOW()); 
+mysql> select * from AddressBook;
+
++----+-----------+-----------+---------------------+---------------------+
+| id | accountId | name      | createdOn           | modifiedOn          |
++----+-----------+-----------+---------------------+---------------------+
+|  2 |         1 | John Bain | 2016-04-26 17:25:44 | 2016-04-26 17:25:44 |
++----+-----------+-----------+---------------------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO Account (email, password, createdOn, modifiedOn) VALUES ("1@fakemail.com", "sugarglider", NOW(), NOW());
+mysql> INSERT INTO Entry (addressBookId, firstName, lastName, birthday, type, subtype) VALUES (1, "John", "Bain", "1990-04-15 00:00:00", "home", "email");     
+
+mysql> UPDATE Entry
+    -> set id=1
+    -> where id=2;  //Had to fix something so I ran this. Good to know I can change auto-incrementing values manually.
