@@ -233,3 +233,43 @@ mysql> SELECT COUNT(*) FROM Entry WHERE type = 'work' AND contentLineOne LIKE '_
 +----------+
 |       60 |
 +----------+
+
+//CHALLENGE
+
+mysql> CREATE TABLE Store (Date DATE PRIMARY KEY, inventoryID int(11));                                                                                        
+mysql> describe Store;
++-------------+---------+------+-----+---------+-------+            //Basically this just holds a series of dates with an associated inventory
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| Date        | date    | NO   | PRI | NULL    |       |
+| inventoryID | int(11) | YES  |     | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+CREATE TABLE Inventory(id int(11) PRIMARY KEY auto_increment, itemId int(11));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe Inventory;                                          //Inventory on a given day w/ list of items keyed to ID
++--------+---------+------+-----+---------+----------------+
+| Field  | Type    | Null | Key | Default | Extra          |
++--------+---------+------+-----+---------+----------------+
+| id     | int(11) | NO   | PRI | NULL    | auto_increment |
+| itemId | int(11) | YES  |     | NULL    |                |
++--------+---------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Item(id int(11) PRIMARY KEY auto_increment, name varchar(50), company varchar(50), priceCAD int(11), numberInStockInMorning int(11), intSalesToday int(11), extSalesToday int(11), returns int(11), numberInStockAtClosing int(11));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe Item;
++------------------------+-------------+------+-----+---------+----------------+
+| Field                  | Type        | Null | Key | Default | Extra          |
++------------------------+-------------+------+-----+---------+----------------+
+| id                     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name                   | varchar(50) | YES  |     | NULL    |                |
+| company                | varchar(50) | YES  |     | NULL    |                |
+| priceCAD               | int(11)     | YES  |     | NULL    |                |
+| numberInStockInMorning | int(11)     | YES  |     | NULL    |                |
+| intSalesToday          | int(11)     | YES  |     | NULL    |                |
+| extSalesToday          | int(11)     | YES  |     | NULL    |                |
+| returns                | int(11)     | YES  |     | NULL    |                |
+| numberInStockAtClosing | int(11)     | YES  |     | NULL    |                |
++------------------------+-------------+------+-----+---------+----------------+
